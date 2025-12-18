@@ -1,0 +1,47 @@
+﻿@model Ciciovan_Bogdan_Ionut_Lab4.TimePredictionModel.ModelInput
+@{
+    ViewData["Title"] = "Time Prediction Using ML.NET";
+}
+<h2>Trip Duration Prediction using ML.NET</h2>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Time">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Passenger_count" class="control-label">Number of Passengers</label>
+                <input asp-for="Passenger_count" type="number" class="form-control" />
+                <span asp-validation-for="Passenger_count" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Trip_distance" class="control-label">Trip Distance</label>
+                <input asp-for="Trip_distance" class="form-control" step="0.1" />
+                <span asp-validation-for="Trip_distance" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Payment_type" class="control-label">Payment Type</label>
+                <select asp-for="Payment_type" class="form-control">
+                    <option value="CSH">Cash</option>
+                    <option value="CRD">Credit</option>
+                </select>
+                <span asp-validation-for="Payment_type" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Predict Duration" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+    <div class="col-md-offset-2 col-md-4">
+        @if (ViewBag.Time != null)
+        {
+            <h1>Result</h1>
+            <h2>Estimated Trip Duration: @Math.Round((decimal)ViewBag.Time, 0) seconds</h2>
+            <p>Approximately @Math.Round((decimal)ViewBag.Time / 60, 1) minutes</p>
+        }
+    </div>
+</div>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
