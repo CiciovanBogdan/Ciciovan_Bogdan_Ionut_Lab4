@@ -1,13 +1,18 @@
 ﻿using Ciciovan_Bogdan_Ionut_Lab4;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.ML;
-using static Ciciovan_Bogdan_Ionut_Lab4.PricePredictionModel;
-using static Ciciovan_Bogdan_Ionut_Lab4.TimePredictionModel;
 
-namespace PredictionController.Controllers
+namespace Ciciovan_Bogdan_Ionut_Lab4.Controllers
 {
     public class PredictionController : Controller
     {
+        [HttpGet]
+        public IActionResult Price()
+        {
+            return View();
+        }
+
+        [HttpPost]
         public IActionResult Price(PricePredictionModel.ModelInput input)
         {
             // Load the model
@@ -21,9 +26,17 @@ namespace PredictionController.Controllers
             PricePredictionModel.ModelOutput result = predEngine.Predict(input);
 
             ViewBag.Price = result.Score;
+
             return View(input);
         }
 
+        [HttpGet]
+        public IActionResult Time()
+        {
+            return View();
+        }
+
+        [HttpPost]
         public IActionResult Time(TimePredictionModel.ModelInput input)
         {
             // Load the model
