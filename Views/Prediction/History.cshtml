@@ -1,0 +1,44 @@
+﻿@model IEnumerable<Ciciovan_Bogdan_Ionut_Lab4.Models.PredictionHistory>
+@{
+    ViewData["Title"] = "Prediction History";
+}
+
+<h2>Istoric predicții</h2>
+<hr />
+
+@if (Model.Any())
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Data</th>
+                <th>Pasageri</th>
+                <th>Distanță</th>
+                <th>Timp (sec)</th>
+                <th>Tip plată</th>
+                <th>Preț prezis</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.CreatedAt</td>
+                    <td>@item.PassengerCount</td>
+                    <td>@item.TripDistance</td>
+                    <td>@item.TripTimeInSecs</td>
+                    <td>@item.PaymentType</td>
+                    <td>@item.PredictedPrice</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p class="alert alert-info">Nu există încă predicții în istoric.</p>
+}
+
+<div class="mt-3">
+    <a asp-action="Price" class="btn btn-primary">Înapoi la Price Prediction</a>
+</div>
