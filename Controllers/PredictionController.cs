@@ -89,7 +89,14 @@ namespace Ciciovan_Bogdan_Ionut_Lab4.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> History(string? paymentType, float? minPrice, float? maxPrice, string? sortOrder)
+        public async Task<IActionResult> History(
+            string? paymentType,
+            float? minPrice,
+            float? maxPrice,
+            string? sortOrder,
+            string? startDate,
+            string? endDate,
+            string? sortDate)
         {
             var query = _context.PredictionHistories.AsQueryable();
 
@@ -108,6 +115,16 @@ namespace Ciciovan_Bogdan_Ionut_Lab4.Controllers
                 query = query.Where(p => p.PredictedPrice <= maxPrice.Value);
             }
 
+            if (!string.IsNullOrEmpty(startDate) && DateTime.TryParse(startDate, out DateTime start))
+            {
+                query = query.Where(p => p.CreatedAt >= start);
+            }
+
+            if (!string.IsNullOrEmpty(endDate) && DateTime.TryParse(endDate, out DateTime end))
+            {
+                query = query.Where(p => p.CreatedAt <= end);
+            }
+
             query = sortOrder switch
             {
                 "price_asc" => query.OrderBy(p => p.PredictedPrice),
@@ -115,10 +132,21 @@ namespace Ciciovan_Bogdan_Ionut_Lab4.Controllers
                 _ => query.OrderBy(p=> p.PredictedPrice) //sortare default
             };
 
+            query = sortDate switch
+            {
+                "date_asc" => query.OrderBy(p => p.CreatedAt),
+                "date_desc" => query.OrderByDescending(p => p.CreatedAt),
+                _ => query.OrderBy(p => p.CreatedAt) //sortare default
+            };
+
             ViewBag.CurrentPaymentType = paymentType;
             ViewBag.CurrentMinPrice = minPrice;
             ViewBag.CurrentMaxPrice = maxPrice;
             ViewBag.CurrentSortOrder = sortOrder;
+
+            ViewBag.CurrentStartDate = startDate;
+            ViewBag.CurrentEndDate = endDate;
+            ViewBag.CurrentSortDate = sortDate;
 
             var result = await query.ToListAsync();
             return View(result);
