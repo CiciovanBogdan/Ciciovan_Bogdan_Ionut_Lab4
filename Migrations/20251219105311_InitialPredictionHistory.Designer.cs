@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Ciciovan_Bogdan_Ionut_Lab4.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251219101533_InitialPredictionHistory")]
+    [Migration("20251219105311_InitialPredictionHistory")]
     partial class InitialPredictionHistory
     {
         /// <inheritdoc />
