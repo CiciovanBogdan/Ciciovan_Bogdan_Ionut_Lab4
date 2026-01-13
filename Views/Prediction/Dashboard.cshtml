@@ -8,6 +8,7 @@
 <h2>Dashboard predicții</h2>
 
 <form method="get" asp-action="Dashboard" class="row g-3 mb-3">
+    <input type="hidden" name="sortOrder" value="@Model.CurrentSort" />
     <div class="col-md-3">
         <label class="form-label">De la data</label>
         <input type="date" name="fromDate" class="form-control"
@@ -45,9 +46,57 @@
                 <table class="table table-sm mb-0">
                     <thead>
                         <tr>
-                            <th>Tip plată</th>
-                            <th>Număr predicții</th>
-                            <th>Preț mediu</th>
+                            <th>
+                                <a asp-action="Dashboard"
+                                   asp-route-fromDate="@Model.FromDate?.ToString("yyyy-MM-dd")"
+                                   asp-route-toDate="@Model.ToDate?.ToString("yyyy-MM-dd")"
+                                   asp-route-sortOrder="@(Model.CurrentSort == "type_asc" ? "type_desc" : "type_asc")"
+                                   class="text-decoration-none text-dark">
+                                    Tip plată
+                                    @if (Model.CurrentSort == "type_asc")
+                                    {
+                                        <i class="bi bi-arrow-up"></i>
+                                    }
+                                    else if (Model.CurrentSort == "type_desc")
+                                    {
+                                        <i class="bi bi-arrow-down"></i>
+                                    }
+                                </a>
+                            </th>
+                            <th>
+                                <a asp-action="Dashboard"
+                                   asp-route-fromDate="@Model.FromDate?.ToString("yyyy-MM-dd")"
+                                   asp-route-toDate="@Model.ToDate?.ToString("yyyy-MM-dd")"
+                                   asp-route-sortOrder="@(Model.CurrentSort == "count_desc" ? "count_asc" : "count_desc")"
+                                   class="text-decoration-none text-dark">
+                                    Număr predicții
+                                    @if (Model.CurrentSort == "count_desc")
+                                    {
+                                        <i class="bi bi-arrow-down"></i>
+                                    }
+                                    else if (Model.CurrentSort == "count_asc")
+                                    {
+                                        <i class="bi bi-arrow-up"></i>
+                                    }
+                                </a>
+                            </th>
+                            <th>
+                                <a asp-action="Dashboard"
+                                   asp-route-fromDate="@Model.FromDate?.ToString("yyyy-MM-dd")"
+                                   asp-route-toDate="@Model.ToDate?.ToString("yyyy-MM-dd")"
+                                   asp-route-sortOrder="@(Model.CurrentSort == "price_desc" ? "price_asc" : "price_desc")"
+                                   class="text-decoration-none text-dark">
+                                    Preț mediu
+                                    @if (Model.CurrentSort == "price_desc")
+                                    {
+                                        <i class="bi bi-arrow-down"></i>
+                                    }
+                                    else if (Model.CurrentSort == "price_asc")
+                                    {
+                                        <i class="bi bi-arrow-up"></i>
+                                    }
+                                </a>
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
@@ -81,6 +130,7 @@
 @section Scripts {
     <!-- Chart.js din CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <script>
         // Pregătim datele pentru grafic din Model.PriceBuckets
         const labels = @Html.Raw(JsonSerializer.Serialize(Model.PriceBuckets.Select(b => b.Label)));

@@ -153,7 +153,7 @@ namespace Ciciovan_Bogdan_Ionut_Lab4.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Dashboard(DateTime? fromDate, DateTime? toDate)
+        public async Task<IActionResult> Dashboard(DateTime? fromDate, DateTime? toDate, string sortOrder)
         {
             var query = _context.PredictionHistories.AsQueryable();
 
@@ -177,19 +177,30 @@ namespace Ciciovan_Bogdan_Ionut_Lab4.Controllers
                 })
                 .ToListAsync();
 
+            paymentTypeStats = sortOrder switch
+            {
+                "count_desc" => paymentTypeStats.OrderByDescending(x => x.Count).ToList(),
+                "count_asc" => paymentTypeStats.OrderBy(x => x.Count).ToList(),
+                "price_desc" => paymentTypeStats.OrderByDescending(x => x.AveragePrice).ToList(),
+                "price_asc" => paymentTypeStats.OrderBy(x => x.AveragePrice).ToList(),
+                "type_asc" => paymentTypeStats.OrderBy(x => x.PaymentType).ToList(),
+                "type_desc" => paymentTypeStats.OrderByDescending(x => x.PaymentType).ToList(),
+                _ => paymentTypeStats.OrderByDescending(x => x.Count).ToList()
+            };
+
             // 3. Distribuția prețurilor pe intervale (buckets)
             var allPredictions = await query
                 .Select(p => p.PredictedPrice)
                 .ToListAsync();
 
             var buckets = new List<PriceBucketStat>
-            {
-                new PriceBucketStat { Label = "0 - 10" },
-                new PriceBucketStat { Label = "10 - 20" },
-                new PriceBucketStat { Label = "20 - 30" },
-                new PriceBucketStat { Label = "30 - 50" },
-                new PriceBucketStat { Label = "> 50" }
-            };
+    {
+        new PriceBucketStat { Label = "0 - 10" },
+        new PriceBucketStat { Label = "10 - 20" },
+        new PriceBucketStat { Label = "20 - 30" },
+        new PriceBucketStat { Label = "30 - 50" },
+        new PriceBucketStat { Label = "> 50" }
+    };
 
             foreach (var price in allPredictions)
             {
@@ -212,7 +223,8 @@ namespace Ciciovan_Bogdan_Ionut_Lab4.Controllers
                 PaymentTypeStats = paymentTypeStats,
                 PriceBuckets = buckets,
                 FromDate = fromDate,
-                ToDate = toDate
+                ToDate = toDate,
+                CurrentSort = sortOrder ?? "count_desc"
             };
 
             return View(vm);

@@ -7,5 +7,6 @@
         public List<PriceBucketStat> PriceBuckets { get; set; } = new();
         public DateTime? FromDate { get; set; }
         public DateTime? ToDate { get; set; }
+        public string CurrentSort { get; set; } = string.Empty;
     }
 }
